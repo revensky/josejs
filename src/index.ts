@@ -1,4 +1,5 @@
 // Exceptions
+export { InvalidJsonWebKeyException } from './lib/exceptions/invalid-jsonwebkey.exception';
 export { JoseException } from './lib/exceptions/jose.exception';
 
 // JSON Web Algorithms
@@ -10,6 +11,8 @@ export { JweEnc } from './lib/jwe/jwe-enc.type';
 export { JweZip } from './lib/jwe/jwe-zip.type';
 
 // JSON Web Key
+export { JsonWebKey } from './lib/jwk/jsonwebkey';
+export { JsonWebKeyParameters } from './lib/jwk/jsonwebkey.parameters';
 export { JwkKeyOp } from './lib/jwk/jwk-keyop.type';
 export { JwkKty } from './lib/jwk/jwk-kty.type';
 export { JwkUse } from './lib/jwk/jwk-use.type';

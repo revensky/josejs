@@ -45,6 +45,9 @@
     "JWA",
     "JWT"
   ],
+  "dependencies": {
+    "@revensky/primitives": "^0.0.3"
+  },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",

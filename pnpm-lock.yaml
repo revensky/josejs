@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@revensky/primitives':
+        specifier: ^0.0.3
+        version: 0.0.3
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.8.1
@@ -545,6 +549,9 @@ packages:
   '@pkgr/core@0.2.7':
     resolution: {integrity: sha512-YLT9Zo3oNPJoBjBc4q8G2mjU4tqIbf5CEOORbUUr48dCD9q3umJ3IPlVqOqDakPfd2HuwccBaqlGhN4Gmr5OWg==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@revensky/primitives@0.0.3':
+    resolution: {integrity: sha512-HLpjP/RU+99UwAd0x5amSrw/7S7S537Sxt6SIh5qEubNBz8z3XNllzxtbyO5LiImnvHNC/12on1P7utWxxTy0g==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -3713,6 +3720,8 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.2.7': {}
+
+  '@revensky/primitives@0.0.3': {}
 
   '@sinclair/typebox@0.27.8': {}
 

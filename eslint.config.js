@@ -18,7 +18,12 @@ export default defineConfig([
   {
     files: ['**/*.js', '**/*.ts'],
     plugins: { js, prettier, 'simple-import-sort': simpleImportSort },
-    languageOptions: { globals: globals.node },
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        Properties: 'readonly',
+      },
+    },
     extends: ['js/recommended'],
     rules: {
       'simple-import-sort/imports': [
