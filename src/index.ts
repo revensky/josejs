@@ -6,6 +6,8 @@ export { JoseException } from './lib/exceptions/jose.exception';
 export { ECJsonWebKey } from './lib/jwa/jwk/ec/ec.jsonwebkey';
 export { ECJsonWebKeyParameters } from './lib/jwa/jwk/ec/ec.jsonwebkey.parameters';
 export { JwkCrv } from './lib/jwa/jwk/ec/jwk-crv.type';
+export { RSAJsonWebKey } from './lib/jwa/jwk/rsa/rsa.jsonwebkey';
+export { RSAJsonWebKeyParameters } from './lib/jwa/jwk/rsa/rsa.jsonwebkey.parameters';
 
 // JSON Web Encryption
 export { JweAlg } from './lib/jwe/jwe-alg.type';
