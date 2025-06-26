@@ -8,6 +8,8 @@ export { ECJsonWebKeyParameters } from './lib/jwa/jwk/ec/ec.jsonwebkey.parameter
 export { JwkCrv } from './lib/jwa/jwk/ec/jwk-crv.type';
 export { OCTJsonWebKey } from './lib/jwa/jwk/oct/oct.jsonwebkey';
 export { OCTJsonWebKeyParameters } from './lib/jwa/jwk/oct/oct.jsonwebkey.parameters';
+export { OKPJsonWebKey } from './lib/jwa/jwk/okp/okp.jsonwebkey';
+export { OKPJsonWebKeyParameters } from './lib/jwa/jwk/okp/okp.jsonwebkey.parameters';
 export { RSAJsonWebKey } from './lib/jwa/jwk/rsa/rsa.jsonwebkey';
 export { RSAJsonWebKeyParameters } from './lib/jwa/jwk/rsa/rsa.jsonwebkey.parameters';
 
