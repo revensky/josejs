@@ -3,6 +3,8 @@ export { InvalidJsonWebKeyException } from './lib/exceptions/invalid-jsonwebkey.
 export { JoseException } from './lib/exceptions/jose.exception';
 
 // JSON Web Algorithms
+export { ECJsonWebKey } from './lib/jwa/jwk/ec/ec.jsonwebkey';
+export { ECJsonWebKeyParameters } from './lib/jwa/jwk/ec/ec.jsonwebkey.parameters';
 export { JwkCrv } from './lib/jwa/jwk/ec/jwk-crv.type';
 
 // JSON Web Encryption
