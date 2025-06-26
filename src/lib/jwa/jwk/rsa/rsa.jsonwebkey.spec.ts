@@ -159,4 +159,17 @@ describe('RSA JSON Web Key', () => {
       expect(jwk.toJSON()).toStrictEqual(jwkParameters);
     });
   });
+
+  describe('getThumbprintParameters()', () => {
+    it('should return an object with the parameters ["e", "kty", "n"] in this exact order.', () => {
+      const jwk = new RSAJsonWebKey(jwkParameters);
+      const thumbprintParameters = Object.entries(jwk['getThumbprintParameters']());
+
+      expect(thumbprintParameters).toStrictEqual<string[][]>([
+        ['e', jwk.e],
+        ['kty', jwk.kty],
+        ['n', jwk.n],
+      ]);
+    });
+  });
 });

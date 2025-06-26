@@ -102,4 +102,17 @@ describe('Octet Key Pair JSON Web Key', () => {
       expect(jwk.toJSON()).toStrictEqual(jwkParameters);
     });
   });
+
+  describe('getThumbprintParameters()', () => {
+    it('should return an object with the parameters ["crv", "kty", "x"] in this exact order.', () => {
+      const jwk = new OKPJsonWebKey(jwkParameters);
+      const thumbprintParameters = Object.entries(jwk['getThumbprintParameters']());
+
+      expect(thumbprintParameters).toStrictEqual<string[][]>([
+        ['crv', jwk.crv],
+        ['kty', jwk.kty],
+        ['x', jwk.x],
+      ]);
+    });
+  });
 });

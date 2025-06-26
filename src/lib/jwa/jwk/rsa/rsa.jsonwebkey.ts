@@ -126,4 +126,12 @@ export class RSAJsonWebKey extends JsonWebKey {
 
     super.validate(parameters);
   }
+
+  /**
+   * Returns the parameters used to calculate the Thumbprint of the
+   * RSA JSON Web Key in lexicographic order.
+   */
+  protected getThumbprintParameters(): RSAJsonWebKeyParameters {
+    return { e: this.e, kty: this.kty, n: this.n };
+  }
 }

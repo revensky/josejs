@@ -111,4 +111,18 @@ describe('Elliptic Curve JSON Web Key', () => {
       expect(jwk.toJSON()).toStrictEqual(jwkParameters);
     });
   });
+
+  describe('getThumbprintParameters()', () => {
+    it('should return an object with the parameters ["crv", "kty", "x", "y"] in this exact order.', () => {
+      const jwk = new ECJsonWebKey(jwkParameters);
+      const thumbprintParameters = Object.entries(jwk['getThumbprintParameters']());
+
+      expect(thumbprintParameters).toStrictEqual<string[][]>([
+        ['crv', jwk.crv],
+        ['kty', jwk.kty],
+        ['x', jwk.x],
+        ['y', jwk.y],
+      ]);
+    });
+  });
 });

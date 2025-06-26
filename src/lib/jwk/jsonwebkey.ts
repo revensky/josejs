@@ -1,4 +1,7 @@
-import { Object } from '@revensky/primitives';
+import { Buffer } from 'buffer';
+import { createHash } from 'crypto';
+
+import { JSON, Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../exceptions/invalid-jsonwebkey.exception';
 import { JweAlg } from '../jwe/jwe-alg.type';
@@ -124,6 +127,11 @@ export abstract class JsonWebKey {
   [parameter: string]: unknown;
 
   /**
+   * Thumbprint of the JSON Web Key.
+   */
+  #thumbprint!: Buffer;
+
+  /**
    * Instantiates a new JSON Web Key based on the provided Parameters.
    *
    * @param parameters JSON Web Key Parameters.
@@ -144,6 +152,21 @@ export abstract class JsonWebKey {
    */
   public static isJsonWebKey(data: unknown): data is JsonWebKey | JsonWebKeyParameters {
     return data instanceof JsonWebKey || (Object.isPlain(data) && Object.hasOwn(data, 'kty'));
+  }
+
+  /**
+   * Returns the Thumbprint of the Public Parameters of the JSON Web Key.
+   *
+   * The hash algorithm **SHA-256** is used to generate the thumbprint.
+   *
+   * @see {@link https://www.rfc-editor.org/rfc/rfc7638.html | RFC 7638}
+   */
+  public getThumbprint(): Buffer {
+    if (!Buffer.isBuffer(this.#thumbprint)) {
+      this.#thumbprint = createHash('sha256').update(JSON.stringify(this.getThumbprintParameters()), 'utf8').digest();
+    }
+
+    return this.#thumbprint;
   }
 
   /**
@@ -224,4 +247,9 @@ export abstract class JsonWebKey {
     }
     // #endregion
   }
+
+  /**
+   * Returns the parameters used to calculate the Thumbprint of the JSON Web Key in lexicographic order.
+   */
+  protected abstract getThumbprintParameters(): JsonWebKeyParameters;
 }

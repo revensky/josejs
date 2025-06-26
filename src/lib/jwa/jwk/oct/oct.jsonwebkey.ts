@@ -57,4 +57,12 @@ export class OCTJsonWebKey extends JsonWebKey {
 
     super.validate(parameters);
   }
+
+  /**
+   * Returns the parameters used to calculate the Thumbprint of the
+   * Octet Sequence JSON Web Key in lexicographic order.
+   */
+  protected getThumbprintParameters(): OCTJsonWebKeyParameters {
+    return { k: this.k, kty: this.kty };
+  }
 }

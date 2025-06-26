@@ -2,6 +2,7 @@ import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from './jsonwebkey';
+import { JsonWebKeyParameters } from './jsonwebkey.parameters';
 import { JwkKeyOp } from './jwk-keyop.type';
 import { JwkUse } from './jwk-use.type';
 
@@ -137,6 +138,30 @@ describe('JSON Web Key', () => {
 
     it('should return true if the provided value is a plain javascript object with a "kty" parameter.', () => {
       expect(JsonWebKey.isJsonWebKey({ kty: 'oct' })).toBeTrue();
+    });
+  });
+
+  describe('getThumbprint()', () => {
+    const jwkParameters: JsonWebKeyParameters = {
+      kty: 'RSA',
+      n:
+        '0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86z' +
+        'wu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5Js' +
+        'GY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMic' +
+        'AtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-' +
+        'bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csF' +
+        'Cur-kEgU8awapJzKnqDKgw',
+      e: 'AQAB',
+    };
+
+    const jwk: JsonWebKey = Reflect.construct(JsonWebKey, [jwkParameters]);
+
+    Reflect.set(jwk, 'getThumbprintParameters', function () {
+      return { e: jwkParameters['e'], kty: jwkParameters.kty, n: jwkParameters['n'] };
+    });
+
+    it('should calculate and return the sha-256 thumbprint of a json web key.', () => {
+      expect(jwk.getThumbprint().toString('base64url')).toEqual('NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs');
     });
   });
 

@@ -90,4 +90,12 @@ export class ECJsonWebKey extends JsonWebKey {
 
     super.validate(parameters);
   }
+
+  /**
+   * Returns the parameters used to calculate the Thumbprint of the
+   * Elliptic Curve JSON Web Key in lexicographic order.
+   */
+  protected getThumbprintParameters(): ECJsonWebKeyParameters {
+    return { crv: this.crv, kty: this.kty, x: this.x, y: this.y };
+  }
 }

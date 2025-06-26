@@ -80,4 +80,16 @@ describe('Octet Sequence JSON Web Key', () => {
       expect(jwk.toJSON()).toStrictEqual(jwkParameters);
     });
   });
+
+  describe('getThumbprintParameters()', () => {
+    it('should return an object with the parameters ["k", "kty"] in this exact order.', () => {
+      const jwk = new OCTJsonWebKey(jwkParameters);
+      const thumbprintParameters = Object.entries(jwk['getThumbprintParameters']());
+
+      expect(thumbprintParameters).toStrictEqual<string[][]>([
+        ['k', jwk.k],
+        ['kty', jwk.kty],
+      ]);
+    });
+  });
 });

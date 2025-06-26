@@ -81,4 +81,12 @@ export class OKPJsonWebKey extends JsonWebKey {
 
     super.validate(parameters);
   }
+
+  /**
+   * Returns the parameters used to calculate the Thumbprint of the
+   * Octet Key Pair JSON Web Key in lexicographic order.
+   */
+  protected getThumbprintParameters(): OKPJsonWebKeyParameters {
+    return { crv: this.crv, kty: this.kty, x: this.x };
+  }
 }
