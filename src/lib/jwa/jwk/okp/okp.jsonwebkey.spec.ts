@@ -40,11 +40,26 @@ const invalidCrvs: any[] = [
   () => 1,
   {},
   [],
-  'any',
+  'unknown',
 ];
 
-const invalidXs: any[] = [undefined, null, true, 1, 1.2, 1n, Symbol('foo'), Buffer, Buffer.alloc(1), () => 1, {}, []];
-const invalidDs: any[] = [null, true, 1, 1.2, 1n, Symbol('foo'), Buffer, Buffer.alloc(1), () => 1, {}, []];
+const invalidXs: any[] = [
+  undefined,
+  null,
+  true,
+  1,
+  1.2,
+  1n,
+  Symbol('foo'),
+  Buffer,
+  Buffer.alloc(1),
+  () => 1,
+  {},
+  [],
+  '',
+];
+
+const invalidDs: any[] = [null, true, 1, 1.2, 1n, Symbol('foo'), Buffer, Buffer.alloc(1), () => 1, {}, [], ''];
 
 describe('Octet Key Pair JSON Web Key', () => {
   describe('constructor', () => {
