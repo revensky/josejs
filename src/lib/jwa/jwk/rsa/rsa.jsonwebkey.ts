@@ -86,12 +86,8 @@ export class RSAJsonWebKey extends JsonWebKey {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "kty".');
     }
 
-    if (typeof parameters.n !== 'string') {
+    if (typeof parameters.n !== 'string' || Buffer.byteLength(parameters.n, 'base64url') < 256) {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "n".');
-    }
-
-    if (Buffer.byteLength(parameters.n, 'base64url') < 256) {
-      throw new InvalidJsonWebKeyException('The RSA Modulus must be at least 2048.');
     }
 
     if (typeof parameters.e !== 'string') {
