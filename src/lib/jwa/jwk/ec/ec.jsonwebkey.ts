@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
@@ -11,6 +13,24 @@ import { JwkCrv } from './jwk-crv.type';
  * @see {@link https://www.rfc-editor.org/rfc/rfc7518.html#section-6.2 | EC JWK}
  */
 export class ECJsonWebKey extends JsonWebKey {
+  /**
+   * Supported NodeJS Crypto Key Elliptic Curves.
+   */
+  static readonly #curves: Record<Extract<JwkCrv, 'P-256' | 'P-384' | 'P-521'>, string> = {
+    'P-256': 'prime256v1',
+    'P-384': 'secp384r1',
+    'P-521': 'secp521r1',
+  };
+
+  /**
+   * Ellipitic Curve Parameters' lengths.
+   */
+  static readonly #lengths: Record<Extract<JwkCrv, 'P-256' | 'P-384' | 'P-521'>, number> = {
+    'P-256': 32,
+    'P-384': 48,
+    'P-521': 64,
+  };
+
   /**
    * JSON Web Key Type.
    */
@@ -35,13 +55,6 @@ export class ECJsonWebKey extends JsonWebKey {
    * Elliptic Curve Private Value.
    */
   public readonly d?: string;
-
-  /**
-   * Elliptic Curves supported by the Elliptic Curve JSON Web Key.
-   */
-  private get supportedEllipticCurves(): Extract<JwkCrv, 'P-256' | 'P-384' | 'P-521'>[] {
-    return ['P-256', 'P-384', 'P-521'];
-  }
 
   /**
    * Instantiates a new Elliptic Curve JSON Web Key based on the provided Parameters.
@@ -72,19 +85,24 @@ export class ECJsonWebKey extends JsonWebKey {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "kty".');
     }
 
-    if (typeof parameters.crv !== 'string' || !this.supportedEllipticCurves.includes(parameters.crv)) {
+    if (typeof parameters.crv !== 'string' || !Object.hasOwn(ECJsonWebKey.#curves, parameters.crv)) {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "crv".');
     }
 
-    if (typeof parameters.x !== 'string') {
+    const parameterLength = ECJsonWebKey.#lengths[parameters.crv];
+
+    if (typeof parameters.x !== 'string' || Buffer.byteLength(parameters.x, 'base64url') !== parameterLength) {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "x".');
     }
 
-    if (typeof parameters.y !== 'string') {
+    if (typeof parameters.y !== 'string' || Buffer.byteLength(parameters.y, 'base64url') !== parameterLength) {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "y".');
     }
 
-    if (typeof parameters.d !== 'undefined' && typeof parameters.d !== 'string') {
+    if (
+      typeof parameters.d !== 'undefined' &&
+      (typeof parameters.d !== 'string' || Buffer.byteLength(parameters.d, 'base64url') !== parameterLength)
+    ) {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "d".');
     }
 
