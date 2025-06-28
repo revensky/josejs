@@ -1,10 +1,15 @@
 import { Buffer } from 'buffer';
+import { generateKeyPair } from 'crypto';
+import { promisify } from 'util';
 
 import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
+import { GenerateRSAJsonWebKeyOptions } from './generate-rsa-jsonwebkey.options';
 import { RSAJsonWebKeyParameters } from './rsa.jsonwebkey.parameters';
+
+const generateKeyPairAsync = promisify(generateKeyPair);
 
 /**
  * RSA JSON Web Key Implementation.
@@ -65,6 +70,39 @@ export class RSAJsonWebKey extends JsonWebKey {
   public constructor(parameters: RSAJsonWebKey | RSAJsonWebKeyParameters) {
     super(parameters);
     Object.assign(this, Object.removeNullishValues(parameters));
+  }
+
+  /**
+   * Generates a new RSA JSON Web Key on the fly based on the provided options.
+   *
+   * @param options Options used to generate the RSA JSON Web Key.
+   * @param parameters Optional RSA JSON Web Key Parameters.
+   */
+  public static override async generate(
+    options: GenerateRSAJsonWebKeyOptions,
+    parameters?: Partial<RSAJsonWebKeyParameters>,
+  ): Promise<RSAJsonWebKey> {
+    if (!Number.isInteger(options.modulus)) {
+      throw new TypeError('The Modulus must be an integer.');
+    }
+
+    if (options.modulus < 2048) {
+      throw new TypeError('The Modulus must be at least 2048.');
+    }
+
+    if (typeof options.publicExponent !== 'undefined' && !Number.isInteger(options.publicExponent)) {
+      throw new TypeError('The Public Exponent must be an integer.');
+    }
+
+    const { privateKey } = await generateKeyPairAsync('rsa', {
+      modulusLength: options.modulus,
+      publicExponent: options.publicExponent ?? 0x010001,
+    });
+
+    const privateKeyParameters = privateKey.export({ format: 'jwk' }) as RSAJsonWebKeyParameters;
+    const rsaJsonWebKeyParameters: RSAJsonWebKeyParameters = Object.assign(privateKeyParameters, parameters);
+
+    return new RSAJsonWebKey(rsaJsonWebKeyParameters);
   }
 
   /**

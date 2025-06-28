@@ -141,6 +141,12 @@ describe('JSON Web Key', () => {
     });
   });
 
+  describe('generate()', () => {
+    it('should throw a method not implemented type error.', async () => {
+      await expect(JsonWebKey.generate({})).rejects.toThrowWithMessage(TypeError, 'Method not implemented.');
+    });
+  });
+
   describe('getThumbprint()', () => {
     const jwkParameters: JsonWebKeyParameters = {
       kty: 'RSA',

@@ -38,6 +38,8 @@ const invalidKs: any[] = [
   '',
 ];
 
+const invalidLengths: any[] = [undefined, null, true, 1.2, 1n, Symbol('foo'), Buffer, Buffer.alloc(1), () => 1, {}, []];
+
 describe('Octet Sequence JSON Web Key', () => {
   describe('constructor', () => {
     it.each(invalidKtys)('should throw when the provided "kty" is invalid.', (kty) => {
@@ -60,6 +62,37 @@ describe('Octet Sequence JSON Web Key', () => {
       expect(() => (jwk = new OCTJsonWebKey(jwkParameters))).not.toThrow();
       expect(jwk).toBeInstanceOf(OCTJsonWebKey);
       expect(jwk).toMatchObject(jwkParameters);
+    });
+  });
+
+  describe('generate()', () => {
+    it.each(invalidLengths)('should throw when passing an invalid length.', async (length) => {
+      await expect(OCTJsonWebKey.generate({ length })).rejects.toThrowWithMessage(
+        TypeError,
+        'The length must be an integer.',
+      );
+    });
+
+    it('should throw when providing a length zero.', async () => {
+      await expect(OCTJsonWebKey.generate({ length: 0 })).rejects.toThrowWithMessage(
+        TypeError,
+        'The length must be greater than zero.',
+      );
+    });
+
+    it('should throw when providing a negative length.', async () => {
+      await expect(OCTJsonWebKey.generate({ length: -1 })).rejects.toThrowWithMessage(
+        TypeError,
+        'The length must be greater than zero.',
+      );
+    });
+
+    it('should generate an octet sequence json web key.', async () => {
+      let jwk!: OCTJsonWebKey;
+
+      expect((jwk = await OCTJsonWebKey.generate({ length: 32 }))).toBeInstanceOf(OCTJsonWebKey);
+      expect(jwk).toMatchObject<OCTJsonWebKeyParameters>({ kty: 'oct', k: expect.toBeString() });
+      expect(Buffer.from(jwk.k, 'base64url')).toHaveLength(32);
     });
   });
 

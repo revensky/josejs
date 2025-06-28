@@ -155,6 +155,21 @@ export abstract class JsonWebKey {
   }
 
   /**
+   * Generates a new JSON Web Key on the fly based on the provided options.
+   *
+   * @param options Options used to generate the JSON Web Key.
+   * @param parameters Optional JSON Web Key Parameters.
+   */
+  public static async generate(
+    // @ts-ignore
+    options: Record<string, unknown>,
+    // @ts-ignore
+    parameters?: Partial<JsonWebKeyParameters>,
+  ): Promise<JsonWebKey> {
+    throw new TypeError('Method not implemented.');
+  }
+
+  /**
    * Returns the Thumbprint of the Public Parameters of the JSON Web Key.
    *
    * The hash algorithm **SHA-256** is used to generate the thumbprint.

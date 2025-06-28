@@ -15,6 +15,7 @@
     "assumeChangesOnlyAffectDirectDependencies": true,
     "checkJs": false,
     "declaration": false,
+    "esModuleInterop": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,

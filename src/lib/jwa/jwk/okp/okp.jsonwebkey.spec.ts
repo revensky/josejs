@@ -100,6 +100,79 @@ describe('Octet Key Pair JSON Web Key', () => {
     });
   });
 
+  describe('generate()', () => {
+    it.each(invalidCrvs)('should throw when passing an unsupported elliptic curve.', async (curve) => {
+      await expect(OKPJsonWebKey.generate({ curve })).rejects.toThrowWithMessage(
+        TypeError,
+        `Unsupported Elliptic Curve "${String(curve)}".`,
+      );
+    });
+
+    it('should generate a Ed25519 octet key pair json web key.', async () => {
+      let jwk!: OKPJsonWebKey;
+
+      expect((jwk = await OKPJsonWebKey.generate({ curve: 'Ed25519' }))).toBeInstanceOf(OKPJsonWebKey);
+
+      expect(jwk).toMatchObject<OKPJsonWebKeyParameters>({
+        kty: 'OKP',
+        crv: 'Ed25519',
+        x: expect.toBeString(),
+        d: expect.toBeString(),
+      });
+
+      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(32);
+      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(32);
+    });
+
+    it('should generate a Ed448 octet key pair json web key.', async () => {
+      let jwk!: OKPJsonWebKey;
+
+      expect((jwk = await OKPJsonWebKey.generate({ curve: 'Ed448' }))).toBeInstanceOf(OKPJsonWebKey);
+
+      expect(jwk).toMatchObject<OKPJsonWebKeyParameters>({
+        kty: 'OKP',
+        crv: 'Ed448',
+        x: expect.toBeString(),
+        d: expect.toBeString(),
+      });
+
+      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(57);
+      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(57);
+    });
+
+    it('should generate a X25519 octet key pair json web key.', async () => {
+      let jwk!: OKPJsonWebKey;
+
+      expect((jwk = await OKPJsonWebKey.generate({ curve: 'X25519' }))).toBeInstanceOf(OKPJsonWebKey);
+
+      expect(jwk).toMatchObject<OKPJsonWebKeyParameters>({
+        kty: 'OKP',
+        crv: 'X25519',
+        x: expect.toBeString(),
+        d: expect.toBeString(),
+      });
+
+      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(32);
+      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(32);
+    });
+
+    it('should generate a X448 octet key pair json web key.', async () => {
+      let jwk!: OKPJsonWebKey;
+
+      expect((jwk = await OKPJsonWebKey.generate({ curve: 'X448' }))).toBeInstanceOf(OKPJsonWebKey);
+
+      expect(jwk).toMatchObject<OKPJsonWebKeyParameters>({
+        kty: 'OKP',
+        crv: 'X448',
+        x: expect.toBeString(),
+        d: expect.toBeString(),
+      });
+
+      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(56);
+      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(56);
+    });
+  });
+
   describe('toJSON()', () => {
     const jwk = new OKPJsonWebKey(jwkParameters);
 

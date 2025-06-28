@@ -1,11 +1,16 @@
 import { Buffer } from 'buffer';
+import { generateKeyPair } from 'crypto';
+import { promisify } from 'util';
 
 import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
 import { ECJsonWebKeyParameters } from './ec.jsonwebkey.parameters';
+import { GenerateECJsonWebKeyOptions } from './generate-ec-jsonwebkey.options';
 import { JwkCrv } from './jwk-crv.type';
+
+const generateKeyPairAsync = promisify(generateKeyPair);
 
 /**
  * Elliptic Curve JSON Web Key Implementation.
@@ -28,7 +33,7 @@ export class ECJsonWebKey extends JsonWebKey {
   static readonly #lengths: Record<Extract<JwkCrv, 'P-256' | 'P-384' | 'P-521'>, number> = {
     'P-256': 32,
     'P-384': 48,
-    'P-521': 64,
+    'P-521': 66,
   };
 
   /**
@@ -64,6 +69,28 @@ export class ECJsonWebKey extends JsonWebKey {
   public constructor(parameters: ECJsonWebKey | ECJsonWebKeyParameters) {
     super(parameters);
     Object.assign(this, Object.removeNullishValues(parameters));
+  }
+
+  /**
+   * Generates a new Elliptic Curve JSON Web Key on the fly based on the provided options.
+   *
+   * @param options Options used to generate the Elliptic Curve JSON Web Key.
+   * @param parameters Optional Elliptic Curve JSON Web Key Parameters.
+   */
+  public static override async generate(
+    options: GenerateECJsonWebKeyOptions,
+    parameters?: Partial<ECJsonWebKeyParameters>,
+  ): Promise<ECJsonWebKey> {
+    if (!Object.hasOwn(this.#curves, options.curve)) {
+      throw new TypeError(`Unsupported Elliptic Curve "${String(options.curve)}".`);
+    }
+
+    const { privateKey } = await generateKeyPairAsync('ec', { namedCurve: this.#curves[options.curve] });
+    const privateKeyParameters = privateKey.export({ format: 'jwk' }) as ECJsonWebKeyParameters;
+
+    const ecJsonWebKeyParameters: ECJsonWebKeyParameters = Object.assign(privateKeyParameters, parameters);
+
+    return new ECJsonWebKey(ecJsonWebKeyParameters);
   }
 
   /**

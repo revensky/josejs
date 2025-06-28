@@ -1,10 +1,15 @@
 import { Buffer } from 'buffer';
+import { randomBytes } from 'crypto';
+import { promisify } from 'util';
 
 import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
+import { GenerateOCTJsonWebKeyOptions } from './generate-oct-jsonwebkey.options';
 import { OCTJsonWebKeyParameters } from './oct.jsonwebkey.parameters';
+
+const randomBytesAsync = promisify(randomBytes);
 
 /**
  * Octet Sequence JSON Web Key Implementation.
@@ -30,6 +35,35 @@ export class OCTJsonWebKey extends JsonWebKey {
   public constructor(parameters: OCTJsonWebKey | OCTJsonWebKeyParameters) {
     super(parameters);
     Object.assign(this, Object.removeNullishValues(parameters));
+  }
+
+  /**
+   * Generates a new Octet Sequence JSON Web Key on the fly based on the provided options.
+   *
+   * @param options Options used to generate the Octet Sequence JSON Web Key.
+   * @param parameters Optional Octet Sequence JSON Web Key Parameters.
+   */
+  public static override async generate(
+    options: GenerateOCTJsonWebKeyOptions,
+    parameters?: Partial<OCTJsonWebKeyParameters>,
+  ): Promise<OCTJsonWebKey> {
+    if (!Number.isInteger(options.length)) {
+      throw new TypeError('The length must be an integer.');
+    }
+
+    if (options.length <= 0) {
+      throw new TypeError('The length must be greater than zero.');
+    }
+
+    const bytes = await randomBytesAsync(options.length);
+
+    const octJsonWebKeyParameters: OCTJsonWebKeyParameters = {
+      kty: 'oct',
+      k: bytes.toString('base64url'),
+      ...parameters,
+    };
+
+    return new OCTJsonWebKey(octJsonWebKeyParameters);
   }
 
   /**

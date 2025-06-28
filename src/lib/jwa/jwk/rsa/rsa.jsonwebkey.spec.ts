@@ -83,6 +83,9 @@ const invalidDPs: any[] = [undefined, null, true, 1, 1.2, 1n, Symbol('foo'), Buf
 const invalidDQs: any[] = [undefined, null, true, 1, 1.2, 1n, Symbol('foo'), Buffer, Buffer.alloc(1), () => 1, {}, []];
 const invalidQIs: any[] = [undefined, null, true, 1, 1.2, 1n, Symbol('foo'), Buffer, Buffer.alloc(1), () => 1, {}, []];
 
+const invalidModuli: any[] = [undefined, null, true, 1.2, 1n, Symbol('foo'), Buffer, Buffer.alloc(1), () => 1, {}, []];
+const invalidPublicExponents: any[] = [null, true, 1.2, 1n, Symbol('foo'), Buffer, Buffer.alloc(1), () => 1, {}, []];
+
 describe('RSA JSON Web Key', () => {
   describe('constructor', () => {
     it.each(invalidKtys)('should throw when the provided "kty" is invalid.', (kty) => {
@@ -154,6 +157,56 @@ describe('RSA JSON Web Key', () => {
       expect(() => (jwk = new RSAJsonWebKey(jwkParameters))).not.toThrow();
       expect(jwk).toBeInstanceOf(RSAJsonWebKey);
       expect(jwk).toMatchObject(jwkParameters);
+    });
+  });
+
+  describe('generate()', () => {
+    it.each(invalidModuli)('should throw when passing an invalid modulus.', async (modulus) => {
+      await expect(RSAJsonWebKey.generate({ modulus })).rejects.toThrowWithMessage(
+        TypeError,
+        'The Modulus must be an integer.',
+      );
+    });
+
+    it('should throw when providing a modulus less than 2048.', async () => {
+      await expect(RSAJsonWebKey.generate({ modulus: 2047 })).rejects.toThrowWithMessage(
+        TypeError,
+        'The Modulus must be at least 2048.',
+      );
+    });
+
+    it.each(invalidPublicExponents)('should throw when passing an invalid public exponent.', async (publicExponent) => {
+      await expect(RSAJsonWebKey.generate({ modulus: 2048, publicExponent })).rejects.toThrowWithMessage(
+        TypeError,
+        'The Public Exponent must be an integer.',
+      );
+    });
+
+    it('should generate an rsa json web key.', async () => {
+      let jwk!: RSAJsonWebKey;
+
+      expect((jwk = await RSAJsonWebKey.generate({ modulus: 2048 }))).toBeInstanceOf(RSAJsonWebKey);
+
+      expect(jwk).toMatchObject<RSAJsonWebKeyParameters>({
+        kty: 'RSA',
+        n: expect.toBeString(),
+        e: expect.toBeString(),
+        d: expect.toBeString(),
+        p: expect.toBeString(),
+        q: expect.toBeString(),
+        dp: expect.toBeString(),
+        dq: expect.toBeString(),
+        qi: expect.toBeString(),
+      });
+
+      expect(Buffer.from(jwk.n, 'base64url')).toHaveLength(256);
+      expect(Buffer.from(jwk.e, 'base64url')).toHaveLength(3);
+      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(256);
+      expect(Buffer.from(jwk.p!, 'base64url')).toHaveLength(128);
+      expect(Buffer.from(jwk.q!, 'base64url')).toHaveLength(128);
+      expect(Buffer.from(jwk.dp!, 'base64url')).toHaveLength(128);
+      expect(Buffer.from(jwk.dq!, 'base64url')).toHaveLength(128);
+      expect(Buffer.from(jwk.qi!, 'base64url')).toHaveLength(128);
     });
   });
 

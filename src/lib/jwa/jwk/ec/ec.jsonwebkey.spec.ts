@@ -124,6 +124,69 @@ describe('Elliptic Curve JSON Web Key', () => {
     });
   });
 
+  describe('generate()', () => {
+    it.each(invalidCrvs)('should throw when passing an unsupported elliptic curve.', async (curve) => {
+      await expect(ECJsonWebKey.generate({ curve })).rejects.toThrowWithMessage(
+        TypeError,
+        `Unsupported Elliptic Curve "${String(curve)}".`,
+      );
+    });
+
+    it('should generate a P-256 elliptic curve json web key.', async () => {
+      let jwk!: ECJsonWebKey;
+
+      expect((jwk = await ECJsonWebKey.generate({ curve: 'P-256' }))).toBeInstanceOf(ECJsonWebKey);
+
+      expect(jwk).toMatchObject<ECJsonWebKeyParameters>({
+        kty: 'EC',
+        crv: 'P-256',
+        x: expect.toBeString(),
+        y: expect.toBeString(),
+        d: expect.toBeString(),
+      });
+
+      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(32);
+      expect(Buffer.from(jwk.y, 'base64url')).toHaveLength(32);
+      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(32);
+    });
+
+    it('should generate a P-384 elliptic curve json web key.', async () => {
+      let jwk!: ECJsonWebKey;
+
+      expect((jwk = await ECJsonWebKey.generate({ curve: 'P-384' }))).toBeInstanceOf(ECJsonWebKey);
+
+      expect(jwk).toMatchObject<ECJsonWebKeyParameters>({
+        kty: 'EC',
+        crv: 'P-384',
+        x: expect.toBeString(),
+        y: expect.toBeString(),
+        d: expect.toBeString(),
+      });
+
+      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(48);
+      expect(Buffer.from(jwk.y, 'base64url')).toHaveLength(48);
+      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(48);
+    });
+
+    it('should generate a P-521 elliptic curve json web key.', async () => {
+      let jwk!: ECJsonWebKey;
+
+      expect((jwk = await ECJsonWebKey.generate({ curve: 'P-521' }))).toBeInstanceOf(ECJsonWebKey);
+
+      expect(jwk).toMatchObject<ECJsonWebKeyParameters>({
+        kty: 'EC',
+        crv: 'P-521',
+        x: expect.toBeString(),
+        y: expect.toBeString(),
+        d: expect.toBeString(),
+      });
+
+      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(66);
+      expect(Buffer.from(jwk.y, 'base64url')).toHaveLength(66);
+      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(66);
+    });
+  });
+
   describe('toJSON()', () => {
     const jwk = new ECJsonWebKey(jwkParameters);
 
