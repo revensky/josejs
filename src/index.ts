@@ -1,6 +1,8 @@
 // Exceptions
 export { InvalidJsonWebKeyException } from './lib/exceptions/invalid-jsonwebkey.exception';
+export { InvalidJsonWebKeySetException } from './lib/exceptions/invalid-jsonwebkeyset.exception';
 export { JoseException } from './lib/exceptions/jose.exception';
+export { JsonWebKeyNotFoundException } from './lib/exceptions/jsonwebkey-not-found.exception';
 
 // JSON Web Algorithms
 export { ECJsonWebKey } from './lib/jwa/jwk/ec/ec.jsonwebkey';
@@ -28,6 +30,10 @@ export { JsonWebKeyParameters } from './lib/jwk/jsonwebkey.parameters';
 export { JwkKeyOp } from './lib/jwk/jwk-keyop.type';
 export { JwkKty } from './lib/jwk/jwk-kty.type';
 export { JwkUse } from './lib/jwk/jwk-use.type';
+
+// JSON Web Key Set
+export { JsonWebKeySet } from './lib/jwks/jsonwebkeyset';
+export { JsonWebKeySetParameters } from './lib/jwks/jsonwebkeyset.parameters';
 
 // JSON Web Signature
 export { JwsAlg } from './lib/jws/jws-alg.type';
