@@ -81,12 +81,12 @@ export abstract class JsonWebKey {
   /**
    * Indicates whether a Public JSON Web Key is used for Plaintext Encryption or Signature Verification.
    */
-  public use?: JwkUse;
+  public use?: JwkUse | undefined;
 
   /**
    * Operations for which the JSON Web Key are intended to be used.
    */
-  public key_ops?: JwkKeyOp[];
+  public key_ops?: JwkKeyOp[] | undefined;
 
   /**
    * Indicates the algorithm allowed for use by this JSON Web Key for the following operations.
@@ -95,32 +95,32 @@ export abstract class JsonWebKey {
    * * JSON Web Encryption Content Encryption
    * * JSON Web Signature
    */
-  public alg?: JweAlg | JweEnc | JwsAlg;
+  public alg?: JweAlg | JweEnc | JwsAlg | undefined;
 
   /**
    * Identifier of the JSON Web Key.
    */
-  public kid?: string;
+  public kid?: string | undefined;
 
   /**
    * URL of the X.509 certificate of the JSON Web Key.
    */
-  public x5u?: string;
+  public x5u?: string | undefined;
 
   /**
    * Chain of X.509 certificates of the JSON Web Key.
    */
-  public x5c?: string[];
+  public x5c?: string[] | undefined;
 
   /**
    * SHA-1 Thumbprint of the X.509 certificate of the JSON Web Key.
    */
-  public x5t?: string;
+  public x5t?: string | undefined;
 
   /**
    * SHA-256 Thumbprint of the X.509 certificate of the JSON Web Key.
    */
-  public 'x5t#S256'?: string;
+  public 'x5t#S256'?: string | undefined;
 
   /**
    * Additional JSON Web Key Parameters.

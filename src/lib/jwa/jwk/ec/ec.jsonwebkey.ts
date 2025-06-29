@@ -61,7 +61,7 @@ export class ECJsonWebKey extends JsonWebKey {
   /**
    * Elliptic Curve Private Value.
    */
-  public readonly d?: string;
+  public readonly d?: string | undefined;
 
   /**
    * Instantiates a new Elliptic Curve JSON Web Key based on the provided Parameters.

@@ -4,6 +4,7 @@ import { InvalidJsonWebKeySetException } from '../exceptions/invalid-jsonwebkeys
 import { JsonWebKeyNotFoundException } from '../exceptions/jsonwebkey-not-found.exception';
 import { JsonWebKey } from '../jwk/jsonwebkey';
 import { JsonWebKeyParameters } from '../jwk/jsonwebkey.parameters';
+import { JsonWebKeyToJSONOptions } from '../jwk/jsonwebkey-to-json.options';
 import { JsonWebKeySetParameters } from './jsonwebkeyset.parameters';
 
 /**
@@ -66,8 +67,11 @@ export class JsonWebKeySet {
 
   /**
    * Returns the Parameters of the JSON Web Key Set.
+   *
+   * @param options Options used to customize the returned JSON Web Keys Parameters.
+   * @returns JSON Web Key Set Parameters.
    */
-  public toJSON(): JsonWebKeySetParameters {
-    return Object.removeNullishValues<JsonWebKeySetParameters>({ keys: this.jwks.map((jwk) => jwk.toJSON()) });
+  public toJSON(options?: JsonWebKeyToJSONOptions): JsonWebKeySetParameters {
+    return Object.removeNullishValues<JsonWebKeySetParameters>({ keys: this.jwks.map((jwk) => jwk.toJSON(options)) });
   }
 }

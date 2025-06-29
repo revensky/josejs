@@ -58,7 +58,7 @@ export class OKPJsonWebKey extends JsonWebKey {
   /**
    * Elliptic Curve Private Value.
    */
-  public readonly d?: string;
+  public readonly d?: string | undefined;
 
   /**
    * Instantiates a new Octet Key Pair JSON Web Key based on the provided Parameters.

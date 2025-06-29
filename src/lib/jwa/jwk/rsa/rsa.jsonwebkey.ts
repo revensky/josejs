@@ -37,32 +37,32 @@ export class RSAJsonWebKey extends JsonWebKey {
   /**
    * Private Exponent.
    */
-  public readonly d?: string;
+  public readonly d?: string | undefined;
 
   /**
    * First Prime Factor.
    */
-  public readonly p?: string;
+  public readonly p?: string | undefined;
 
   /**
    * Second Prime Factor.
    */
-  public readonly q?: string;
+  public readonly q?: string | undefined;
 
   /**
    * First Factor CRT Exponent.
    */
-  public readonly dp?: string;
+  public readonly dp?: string | undefined;
 
   /**
    * Second Factor CRT Exponent.
    */
-  public readonly dq?: string;
+  public readonly dq?: string | undefined;
 
   /**
    * First Factor CRT Coefficient.
    */
-  public readonly qi?: string;
+  public readonly qi?: string | undefined;
 
   /**
    * Instantiates a new RSA JSON Web Key based on the provided Parameters.
