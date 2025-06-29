@@ -6,6 +6,7 @@ import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
+import { JsonWebKeyParameters } from '../../../jwk/jsonwebkey.parameters';
 import { GenerateOCTJsonWebKeyOptions } from './generate-oct-jsonwebkey.options';
 import { OCTJsonWebKeyParameters } from './oct.jsonwebkey.parameters';
 
@@ -43,9 +44,9 @@ export class OCTJsonWebKey extends JsonWebKey {
    * @param options Options used to generate the Octet Sequence JSON Web Key.
    * @param parameters Optional Octet Sequence JSON Web Key Parameters.
    */
-  public static override async generate(
+  public static async generate(
     options: GenerateOCTJsonWebKeyOptions,
-    parameters?: Partial<OCTJsonWebKeyParameters>,
+    parameters: Partial<JsonWebKeyParameters> = {},
   ): Promise<OCTJsonWebKey> {
     if (!Number.isInteger(options.length)) {
       throw new TypeError('The length must be an integer.');
@@ -57,11 +58,12 @@ export class OCTJsonWebKey extends JsonWebKey {
 
     const bytes = await randomBytesAsync(options.length);
 
-    const octJsonWebKeyParameters: OCTJsonWebKeyParameters = {
-      kty: 'oct',
-      k: bytes.toString('base64url'),
-      ...parameters,
-    };
+    const secretKeyParameters = { kty: 'oct', k: bytes.toString('base64url') } as OCTJsonWebKeyParameters;
+
+    const octJsonWebKeyParameters: OCTJsonWebKeyParameters = Object.assign(
+      secretKeyParameters,
+      Object.removeNullishValues(parameters),
+    );
 
     return new OCTJsonWebKey(octJsonWebKeyParameters);
   }

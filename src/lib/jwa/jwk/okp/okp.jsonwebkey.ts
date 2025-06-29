@@ -6,6 +6,7 @@ import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
+import { JsonWebKeyParameters } from '../../../jwk/jsonwebkey.parameters';
 import { JwkCrv } from '../ec/jwk-crv.type';
 import { GenerateOKPJsonWebKeyOptions } from './generate-okp-jsonwebkey.options';
 import { OKPJsonWebKeyParameters } from './okp.jsonwebkey.parameters';
@@ -74,18 +75,22 @@ export class OKPJsonWebKey extends JsonWebKey {
    * @param options Options used to generate the Octet Key Pair JSON Web Key.
    * @param parameters Optional Octet Key Pair JSON Web Key Parameters.
    */
-  public static override async generate(
+  public static async generate(
     options: GenerateOKPJsonWebKeyOptions,
-    parameters?: Partial<OKPJsonWebKeyParameters>,
+    parameters: Partial<JsonWebKeyParameters> = {},
   ): Promise<OKPJsonWebKey> {
     if (!Object.hasOwn(this.#curves, options.curve)) {
       throw new TypeError(`Unsupported Elliptic Curve "${String(options.curve)}".`);
     }
 
     const { privateKey } = await generateKeyPairAsync(<any>this.#curves[options.curve]);
+
     const privateKeyParameters = privateKey.export({ format: 'jwk' }) as OKPJsonWebKeyParameters;
 
-    const okpJsonWebKeyParameters: OKPJsonWebKeyParameters = Object.assign(privateKeyParameters, parameters);
+    const okpJsonWebKeyParameters: OKPJsonWebKeyParameters = Object.assign(
+      privateKeyParameters,
+      Object.removeNullishValues(parameters),
+    );
 
     return new OKPJsonWebKey(okpJsonWebKeyParameters);
   }

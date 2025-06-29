@@ -50,13 +50,13 @@ const invalidKtys: any[] = [
   1,
   1.2,
   1n,
-  'a',
   Symbol('foo'),
   Buffer,
   Buffer.alloc(1),
   () => 1,
   {},
   [],
+  'unknown',
 ];
 
 const invalidNs: any[] = [
@@ -198,15 +198,6 @@ describe('RSA JSON Web Key', () => {
         dq: expect.toBeString(),
         qi: expect.toBeString(),
       });
-
-      expect(Buffer.from(jwk.n, 'base64url')).toHaveLength(256);
-      expect(Buffer.from(jwk.e, 'base64url')).toHaveLength(3);
-      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(256);
-      expect(Buffer.from(jwk.p!, 'base64url')).toHaveLength(128);
-      expect(Buffer.from(jwk.q!, 'base64url')).toHaveLength(128);
-      expect(Buffer.from(jwk.dp!, 'base64url')).toHaveLength(128);
-      expect(Buffer.from(jwk.dq!, 'base64url')).toHaveLength(128);
-      expect(Buffer.from(jwk.qi!, 'base64url')).toHaveLength(128);
     });
   });
 

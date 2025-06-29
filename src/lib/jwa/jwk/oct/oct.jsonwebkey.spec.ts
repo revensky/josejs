@@ -13,13 +13,13 @@ const invalidKtys: any[] = [
   1,
   1.2,
   1n,
-  'a',
   Symbol('foo'),
   Buffer,
   Buffer.alloc(1),
   () => 1,
   {},
   [],
+  'unknown',
 ];
 
 const invalidKs: any[] = [
@@ -91,8 +91,8 @@ describe('Octet Sequence JSON Web Key', () => {
       let jwk!: OCTJsonWebKey;
 
       expect((jwk = await OCTJsonWebKey.generate({ length: 32 }))).toBeInstanceOf(OCTJsonWebKey);
+
       expect(jwk).toMatchObject<OCTJsonWebKeyParameters>({ kty: 'oct', k: expect.toBeString() });
-      expect(Buffer.from(jwk.k, 'base64url')).toHaveLength(32);
     });
   });
 

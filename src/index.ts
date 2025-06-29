@@ -37,3 +37,6 @@ export { JsonWebKeySetParameters } from './lib/jwks/jsonwebkeyset.parameters';
 
 // JSON Web Signature
 export { JwsAlg } from './lib/jws/jws-alg.type';
+
+// Utilities
+export { generateJsonWebKey } from './lib/utils/generate-jsonwebkey';

@@ -6,6 +6,7 @@ import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
+import { JsonWebKeyParameters } from '../../../jwk/jsonwebkey.parameters';
 import { GenerateRSAJsonWebKeyOptions } from './generate-rsa-jsonwebkey.options';
 import { RSAJsonWebKeyParameters } from './rsa.jsonwebkey.parameters';
 
@@ -78,9 +79,9 @@ export class RSAJsonWebKey extends JsonWebKey {
    * @param options Options used to generate the RSA JSON Web Key.
    * @param parameters Optional RSA JSON Web Key Parameters.
    */
-  public static override async generate(
+  public static async generate(
     options: GenerateRSAJsonWebKeyOptions,
-    parameters?: Partial<RSAJsonWebKeyParameters>,
+    parameters: Partial<JsonWebKeyParameters> = {},
   ): Promise<RSAJsonWebKey> {
     if (!Number.isInteger(options.modulus)) {
       throw new TypeError('The Modulus must be an integer.');
@@ -100,7 +101,11 @@ export class RSAJsonWebKey extends JsonWebKey {
     });
 
     const privateKeyParameters = privateKey.export({ format: 'jwk' }) as RSAJsonWebKeyParameters;
-    const rsaJsonWebKeyParameters: RSAJsonWebKeyParameters = Object.assign(privateKeyParameters, parameters);
+
+    const rsaJsonWebKeyParameters: RSAJsonWebKeyParameters = Object.assign(
+      privateKeyParameters,
+      Object.removeNullishValues(parameters),
+    );
 
     return new RSAJsonWebKey(rsaJsonWebKeyParameters);
   }

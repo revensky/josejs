@@ -6,6 +6,7 @@ import { Object } from '@revensky/primitives';
 
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
+import { JsonWebKeyParameters } from '../../../jwk/jsonwebkey.parameters';
 import { ECJsonWebKeyParameters } from './ec.jsonwebkey.parameters';
 import { GenerateECJsonWebKeyOptions } from './generate-ec-jsonwebkey.options';
 import { JwkCrv } from './jwk-crv.type';
@@ -77,18 +78,22 @@ export class ECJsonWebKey extends JsonWebKey {
    * @param options Options used to generate the Elliptic Curve JSON Web Key.
    * @param parameters Optional Elliptic Curve JSON Web Key Parameters.
    */
-  public static override async generate(
+  public static async generate(
     options: GenerateECJsonWebKeyOptions,
-    parameters?: Partial<ECJsonWebKeyParameters>,
+    parameters: Partial<JsonWebKeyParameters> = {},
   ): Promise<ECJsonWebKey> {
     if (!Object.hasOwn(this.#curves, options.curve)) {
       throw new TypeError(`Unsupported Elliptic Curve "${String(options.curve)}".`);
     }
 
     const { privateKey } = await generateKeyPairAsync('ec', { namedCurve: this.#curves[options.curve] });
+
     const privateKeyParameters = privateKey.export({ format: 'jwk' }) as ECJsonWebKeyParameters;
 
-    const ecJsonWebKeyParameters: ECJsonWebKeyParameters = Object.assign(privateKeyParameters, parameters);
+    const ecJsonWebKeyParameters: ECJsonWebKeyParameters = Object.assign(
+      privateKeyParameters,
+      Object.removeNullishValues(parameters),
+    );
 
     return new ECJsonWebKey(ecJsonWebKeyParameters);
   }

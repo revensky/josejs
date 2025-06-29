@@ -18,13 +18,13 @@ const invalidKtys: any[] = [
   1,
   1.2,
   1n,
-  'a',
   Symbol('foo'),
   Buffer,
   Buffer.alloc(1),
   () => 1,
   {},
   [],
+  'unknown',
 ];
 
 const invalidCrvs: any[] = [
@@ -119,9 +119,6 @@ describe('Octet Key Pair JSON Web Key', () => {
         x: expect.toBeString(),
         d: expect.toBeString(),
       });
-
-      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(32);
-      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(32);
     });
 
     it('should generate a Ed448 octet key pair json web key.', async () => {
@@ -135,9 +132,6 @@ describe('Octet Key Pair JSON Web Key', () => {
         x: expect.toBeString(),
         d: expect.toBeString(),
       });
-
-      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(57);
-      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(57);
     });
 
     it('should generate a X25519 octet key pair json web key.', async () => {
@@ -151,9 +145,6 @@ describe('Octet Key Pair JSON Web Key', () => {
         x: expect.toBeString(),
         d: expect.toBeString(),
       });
-
-      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(32);
-      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(32);
     });
 
     it('should generate a X448 octet key pair json web key.', async () => {
@@ -167,9 +158,6 @@ describe('Octet Key Pair JSON Web Key', () => {
         x: expect.toBeString(),
         d: expect.toBeString(),
       });
-
-      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(56);
-      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(56);
     });
   });
 

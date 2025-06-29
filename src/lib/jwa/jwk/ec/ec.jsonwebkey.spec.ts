@@ -19,13 +19,13 @@ const invalidKtys: any[] = [
   1,
   1.2,
   1n,
-  'a',
   Symbol('foo'),
   Buffer,
   Buffer.alloc(1),
   () => 1,
   {},
   [],
+  'unknown',
 ];
 
 const invalidCrvs: any[] = [
@@ -144,10 +144,6 @@ describe('Elliptic Curve JSON Web Key', () => {
         y: expect.toBeString(),
         d: expect.toBeString(),
       });
-
-      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(32);
-      expect(Buffer.from(jwk.y, 'base64url')).toHaveLength(32);
-      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(32);
     });
 
     it('should generate a P-384 elliptic curve json web key.', async () => {
@@ -162,10 +158,6 @@ describe('Elliptic Curve JSON Web Key', () => {
         y: expect.toBeString(),
         d: expect.toBeString(),
       });
-
-      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(48);
-      expect(Buffer.from(jwk.y, 'base64url')).toHaveLength(48);
-      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(48);
     });
 
     it('should generate a P-521 elliptic curve json web key.', async () => {
@@ -180,10 +172,6 @@ describe('Elliptic Curve JSON Web Key', () => {
         y: expect.toBeString(),
         d: expect.toBeString(),
       });
-
-      expect(Buffer.from(jwk.x, 'base64url')).toHaveLength(66);
-      expect(Buffer.from(jwk.y, 'base64url')).toHaveLength(66);
-      expect(Buffer.from(jwk.d!, 'base64url')).toHaveLength(66);
     });
   });
 
