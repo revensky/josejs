@@ -98,19 +98,22 @@ describe('Octet Sequence JSON Web Key', () => {
 
   describe('toJSON()', () => {
     const jwk = new OCTJsonWebKey(jwkParameters);
+    const exportedJwkParameters = jwk.toJSON({ exportPublicKeyOnly: false });
 
     it('should be a plain javascript object.', () => {
-      expect(Object.isPlain(jwk.toJSON())).toBeTrue();
+      expect(Object.isPlain(exportedJwkParameters)).toBeTrue();
     });
 
     it('should not have any functions, symbols or undefineds.', () => {
       expect(
-        Object.values(jwk.toJSON()).every((value) => !['function', 'symbol', 'undefined'].includes(typeof value)),
+        Object.values(exportedJwkParameters).every((value) => {
+          return !['function', 'symbol', 'undefined'].includes(typeof value);
+        }),
       ).toBeTrue();
     });
 
     it('should return exactly the same parameters as provided in the constructor.', () => {
-      expect(jwk.toJSON()).toStrictEqual(jwkParameters);
+      expect(exportedJwkParameters).toStrictEqual(jwkParameters);
     });
   });
 
@@ -123,6 +126,13 @@ describe('Octet Sequence JSON Web Key', () => {
         ['k', jwk.k],
         ['kty', jwk.kty],
       ]);
+    });
+  });
+
+  describe('getPrivateParameters()', () => {
+    it('should return an empty array.', () => {
+      const jwk = new OCTJsonWebKey(jwkParameters);
+      expect(jwk['getPrivateParameters']()).toBeArrayOfSize(0);
     });
   });
 });

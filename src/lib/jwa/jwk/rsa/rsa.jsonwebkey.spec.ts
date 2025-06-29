@@ -203,19 +203,22 @@ describe('RSA JSON Web Key', () => {
 
   describe('toJSON()', () => {
     const jwk = new RSAJsonWebKey(jwkParameters);
+    const exportedJwkParameters = jwk.toJSON({ exportPublicKeyOnly: false });
 
     it('should be a plain javascript object.', () => {
-      expect(Object.isPlain(jwk.toJSON())).toBeTrue();
+      expect(Object.isPlain(exportedJwkParameters)).toBeTrue();
     });
 
     it('should not have any functions, symbols or undefineds.', () => {
       expect(
-        Object.values(jwk.toJSON()).every((value) => !['function', 'symbol', 'undefined'].includes(typeof value)),
+        Object.values(exportedJwkParameters).every((value) => {
+          return !['function', 'symbol', 'undefined'].includes(typeof value);
+        }),
       ).toBeTrue();
     });
 
     it('should return exactly the same parameters as provided in the constructor.', () => {
-      expect(jwk.toJSON()).toStrictEqual(jwkParameters);
+      expect(exportedJwkParameters).toStrictEqual(jwkParameters);
     });
   });
 
@@ -229,6 +232,13 @@ describe('RSA JSON Web Key', () => {
         ['kty', jwk.kty],
         ['n', jwk.n],
       ]);
+    });
+  });
+
+  describe('getPrivateParameters()', () => {
+    it('should return ["d", "p", "q", "dp", "dq", "qi"].', () => {
+      const jwk = new RSAJsonWebKey(jwkParameters);
+      expect(jwk['getPrivateParameters']()).toStrictEqual(expect.arrayContaining(['d', 'p', 'q', 'dp', 'dq', 'qi']));
     });
   });
 });

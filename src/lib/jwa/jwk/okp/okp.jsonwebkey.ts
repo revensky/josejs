@@ -7,6 +7,7 @@ import { Object } from '@revensky/primitives';
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
 import { JsonWebKeyParameters } from '../../../jwk/jsonwebkey.parameters';
+import { JsonWebKeyToJSONOptions } from '../../../jwk/jsonwebkey-to-json.options';
 import { JwkCrv } from '../ec/jwk-crv.type';
 import { GenerateOKPJsonWebKeyOptions } from './generate-okp-jsonwebkey.options';
 import { OKPJsonWebKeyParameters } from './okp.jsonwebkey.parameters';
@@ -85,7 +86,7 @@ export class OKPJsonWebKey extends JsonWebKey {
 
     const { privateKey } = await generateKeyPairAsync(<any>this.#curves[options.curve]);
 
-    const privateKeyParameters = privateKey.export({ format: 'jwk' }) as OKPJsonWebKeyParameters;
+    const privateKeyParameters = <OKPJsonWebKeyParameters>privateKey.export({ format: 'jwk' });
 
     const okpJsonWebKeyParameters: OKPJsonWebKeyParameters = Object.assign(
       privateKeyParameters,
@@ -98,10 +99,11 @@ export class OKPJsonWebKey extends JsonWebKey {
   /**
    * Returns the parameters of the Octet Key Pair JSON Web Key in a JSON-friendly format.
    *
+   * @param options Options used to customize the returned Octet Key Pair JSON Web Key Parameters.
    * @returns Octet Key Pair JSON Web Key Parameters.
    */
-  public override toJSON(): OKPJsonWebKeyParameters {
-    return super.toJSON() as OKPJsonWebKeyParameters;
+  public override toJSON(options?: JsonWebKeyToJSONOptions): OKPJsonWebKeyParameters {
+    return <OKPJsonWebKeyParameters>super.toJSON(options);
   }
 
   /**
@@ -140,5 +142,12 @@ export class OKPJsonWebKey extends JsonWebKey {
    */
   protected getThumbprintParameters(): OKPJsonWebKeyParameters {
     return { crv: this.crv, kty: this.kty, x: this.x };
+  }
+
+  /**
+   * Returns the list of all private parameters of the Octet Key Pair JSON Web Key.
+   */
+  protected getPrivateParameters(): string[] {
+    return ['d'];
   }
 }

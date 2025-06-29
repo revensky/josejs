@@ -166,10 +166,66 @@ describe('JSON Web Key', () => {
   });
 
   describe('toJSON()', () => {
-    const jwk = Reflect.construct(JsonWebKey, [{ kty: 'oct' }]) as JsonWebKey;
+    const jwkParameters: JsonWebKeyParameters = {
+      kty: 'EC',
+      crv: 'P-256',
+      x: '4c_cS6IT6jaVQeobt_6BDCTmzBaBOTmmiSCpjd5a6Og',
+      y: 'mnrPnCFTDkGdEwilabaqM7DzwlAFgetZTmP9ycHPxF8',
+      d: 'bwVX6Vx-TOfGKYOPAcu2xhaj3JUzs-McsC-suaHnFBo',
+    };
+    const jwk = <JsonWebKey>Reflect.construct(JsonWebKey, [jwkParameters]);
 
-    it('should be a plain javascript object.', () => {
-      expect(Object.isPlain(jwk.toJSON())).toBeTrue();
+    // We don't assign in the abstract class.
+    Object.assign(jwk, jwkParameters);
+
+    Reflect.set(jwk, 'getPrivateParameters', function () {
+      return ['d'];
+    });
+
+    it('should be a plain javascript object with only the public parameters of the json web key when no options are provided.', () => {
+      const exportedJwkParameters = jwk.toJSON();
+
+      expect(Object.isPlain(exportedJwkParameters)).toBeTrue();
+
+      expect(exportedJwkParameters).toStrictEqual(
+        expect.objectContaining<JsonWebKeyParameters>({
+          kty: jwkParameters.kty,
+          crv: jwkParameters['crv'],
+          x: jwkParameters['x'],
+          y: jwkParameters['y'],
+        }),
+      );
+    });
+
+    it('should be a plain javascript object with only the public parameters of the json web key when options are provided.', () => {
+      const exportedJwkParameters = jwk.toJSON({ exportPublicKeyOnly: true });
+
+      expect(Object.isPlain(exportedJwkParameters)).toBeTrue();
+
+      expect(exportedJwkParameters).toStrictEqual(
+        expect.objectContaining<JsonWebKeyParameters>({
+          kty: jwkParameters.kty,
+          crv: jwkParameters['crv'],
+          x: jwkParameters['x'],
+          y: jwkParameters['y'],
+        }),
+      );
+    });
+
+    it('should be a plain javascript object with all the parameters of the json web key.', () => {
+      const exportedJwkParameters = jwk.toJSON({ exportPublicKeyOnly: false });
+
+      expect(Object.isPlain(exportedJwkParameters)).toBeTrue();
+
+      expect(exportedJwkParameters).toStrictEqual(
+        expect.objectContaining<JsonWebKeyParameters>({
+          kty: jwkParameters.kty,
+          crv: jwkParameters['crv'],
+          x: jwkParameters['x'],
+          y: jwkParameters['y'],
+          d: jwkParameters['d'],
+        }),
+      );
     });
 
     it('should not have any functions, symbols or undefineds.', () => {

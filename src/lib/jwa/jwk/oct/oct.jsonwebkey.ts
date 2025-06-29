@@ -7,6 +7,7 @@ import { Object } from '@revensky/primitives';
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
 import { JsonWebKeyParameters } from '../../../jwk/jsonwebkey.parameters';
+import { JsonWebKeyToJSONOptions } from '../../../jwk/jsonwebkey-to-json.options';
 import { GenerateOCTJsonWebKeyOptions } from './generate-oct-jsonwebkey.options';
 import { OCTJsonWebKeyParameters } from './oct.jsonwebkey.parameters';
 
@@ -58,7 +59,7 @@ export class OCTJsonWebKey extends JsonWebKey {
 
     const bytes = await randomBytesAsync(options.length);
 
-    const secretKeyParameters = { kty: 'oct', k: bytes.toString('base64url') } as OCTJsonWebKeyParameters;
+    const secretKeyParameters = <OCTJsonWebKeyParameters>{ kty: 'oct', k: bytes.toString('base64url') };
 
     const octJsonWebKeyParameters: OCTJsonWebKeyParameters = Object.assign(
       secretKeyParameters,
@@ -71,10 +72,11 @@ export class OCTJsonWebKey extends JsonWebKey {
   /**
    * Returns the parameters of the Octet Sequence JSON Web Key in a JSON-friendly format.
    *
+   * @param options Options used to customize the returned Octet Sequence JSON Web Key Parameters.
    * @returns Octet Sequence JSON Web Key Parameters.
    */
-  public override toJSON(): OCTJsonWebKeyParameters {
-    return super.toJSON() as OCTJsonWebKeyParameters;
+  public override toJSON(options?: JsonWebKeyToJSONOptions): OCTJsonWebKeyParameters {
+    return <OCTJsonWebKeyParameters>super.toJSON(options);
   }
 
   /**
@@ -100,5 +102,12 @@ export class OCTJsonWebKey extends JsonWebKey {
    */
   protected getThumbprintParameters(): OCTJsonWebKeyParameters {
     return { k: this.k, kty: this.kty };
+  }
+
+  /**
+   * Returns the list of all private parameters of the Octet Sequence JSON Web Key.
+   */
+  protected getPrivateParameters(): string[] {
+    return [];
   }
 }

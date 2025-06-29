@@ -7,6 +7,7 @@ import { Object } from '@revensky/primitives';
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
 import { JsonWebKeyParameters } from '../../../jwk/jsonwebkey.parameters';
+import { JsonWebKeyToJSONOptions } from '../../../jwk/jsonwebkey-to-json.options';
 import { ECJsonWebKeyParameters } from './ec.jsonwebkey.parameters';
 import { GenerateECJsonWebKeyOptions } from './generate-ec-jsonwebkey.options';
 import { JwkCrv } from './jwk-crv.type';
@@ -88,7 +89,7 @@ export class ECJsonWebKey extends JsonWebKey {
 
     const { privateKey } = await generateKeyPairAsync('ec', { namedCurve: this.#curves[options.curve] });
 
-    const privateKeyParameters = privateKey.export({ format: 'jwk' }) as ECJsonWebKeyParameters;
+    const privateKeyParameters = <ECJsonWebKeyParameters>privateKey.export({ format: 'jwk' });
 
     const ecJsonWebKeyParameters: ECJsonWebKeyParameters = Object.assign(
       privateKeyParameters,
@@ -101,10 +102,11 @@ export class ECJsonWebKey extends JsonWebKey {
   /**
    * Returns the parameters of the Elliptic Curve JSON Web Key in a JSON-friendly format.
    *
+   * @param options Options used to customize the returned Elliptic Curve JSON Web Key Parameters.
    * @returns Elliptic Curve JSON Web Key Parameters.
    */
-  public override toJSON(): ECJsonWebKeyParameters {
-    return super.toJSON() as ECJsonWebKeyParameters;
+  public override toJSON(options?: JsonWebKeyToJSONOptions): ECJsonWebKeyParameters {
+    return <ECJsonWebKeyParameters>super.toJSON(options);
   }
 
   /**
@@ -147,5 +149,12 @@ export class ECJsonWebKey extends JsonWebKey {
    */
   protected getThumbprintParameters(): ECJsonWebKeyParameters {
     return { crv: this.crv, kty: this.kty, x: this.x, y: this.y };
+  }
+
+  /**
+   * Returns the list of all private parameters of the Elliptic Curve JSON Web Key.
+   */
+  protected getPrivateParameters(): string[] {
+    return ['d'];
   }
 }

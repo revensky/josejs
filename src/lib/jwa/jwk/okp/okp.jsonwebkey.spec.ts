@@ -163,19 +163,22 @@ describe('Octet Key Pair JSON Web Key', () => {
 
   describe('toJSON()', () => {
     const jwk = new OKPJsonWebKey(jwkParameters);
+    const exportedJwkParameters = jwk.toJSON({ exportPublicKeyOnly: false });
 
     it('should be a plain javascript object.', () => {
-      expect(Object.isPlain(jwk.toJSON())).toBeTrue();
+      expect(Object.isPlain(exportedJwkParameters)).toBeTrue();
     });
 
     it('should not have any functions, symbols or undefineds.', () => {
       expect(
-        Object.values(jwk.toJSON()).every((value) => !['function', 'symbol', 'undefined'].includes(typeof value)),
+        Object.values(exportedJwkParameters).every((value) => {
+          return !['function', 'symbol', 'undefined'].includes(typeof value);
+        }),
       ).toBeTrue();
     });
 
     it('should return exactly the same parameters as provided in the constructor.', () => {
-      expect(jwk.toJSON()).toStrictEqual(jwkParameters);
+      expect(exportedJwkParameters).toStrictEqual(jwkParameters);
     });
   });
 
@@ -189,6 +192,13 @@ describe('Octet Key Pair JSON Web Key', () => {
         ['kty', jwk.kty],
         ['x', jwk.x],
       ]);
+    });
+  });
+
+  describe('getPrivateParameters()', () => {
+    it('should return ["d"].', () => {
+      const jwk = new OKPJsonWebKey(jwkParameters);
+      expect(jwk['getPrivateParameters']()).toStrictEqual(expect.arrayContaining(['d']));
     });
   });
 });

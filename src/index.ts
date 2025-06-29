@@ -27,6 +27,7 @@ export { JweZip } from './lib/jwe/jwe-zip.type';
 // JSON Web Key
 export { JsonWebKey } from './lib/jwk/jsonwebkey';
 export { JsonWebKeyParameters } from './lib/jwk/jsonwebkey.parameters';
+export { JsonWebKeyToJSONOptions } from './lib/jwk/jsonwebkey-to-json.options';
 export { JwkKeyOp } from './lib/jwk/jwk-keyop.type';
 export { JwkKty } from './lib/jwk/jwk-kty.type';
 export { JwkUse } from './lib/jwk/jwk-use.type';

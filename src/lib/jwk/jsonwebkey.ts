@@ -8,6 +8,7 @@ import { JweAlg } from '../jwe/jwe-alg.type';
 import { JweEnc } from '../jwe/jwe-enc.type';
 import { JwsAlg } from '../jws/jws-alg.type';
 import { JsonWebKeyParameters } from './jsonwebkey.parameters';
+import { JsonWebKeyToJSONOptions } from './jsonwebkey-to-json.options';
 import { JwkKeyOp } from './jwk-keyop.type';
 import { JwkKty } from './jwk-kty.type';
 import { JwkUse } from './jwk-use.type';
@@ -172,14 +173,19 @@ export abstract class JsonWebKey {
   /**
    * Returns the parameters of the JSON Web Key in a JSON-friendly format.
    *
+   * @param options Options used to customize the returned JSON Web Key Parameters.
    * @returns JSON Web Key Parameters.
    */
-  public toJSON(): JsonWebKeyParameters {
-    return <JsonWebKeyParameters>(
-      Object.fromEntries(
-        Object.entries(this).filter(([, value]) => !['function', 'symbol', 'undefined'].includes(typeof value)),
-      )
+  public toJSON(options: JsonWebKeyToJSONOptions = {}): JsonWebKeyParameters {
+    let jwkParameters = Object.entries(this).filter(
+      ([, value]) => !['function', 'symbol', 'undefined'].includes(typeof value),
     );
+
+    if (options.exportPublicKeyOnly ?? true) {
+      jwkParameters = jwkParameters.filter(([jwkParameter]) => !this.getPrivateParameters().includes(jwkParameter));
+    }
+
+    return <JsonWebKeyParameters>Object.removeNullishValues(Object.fromEntries(jwkParameters));
   }
 
   /**
@@ -252,4 +258,9 @@ export abstract class JsonWebKey {
    * Returns the parameters used to calculate the Thumbprint of the JSON Web Key in lexicographic order.
    */
   protected abstract getThumbprintParameters(): JsonWebKeyParameters;
+
+  /**
+   * Returns the list of all private parameters of the JSON Web Key.
+   */
+  protected abstract getPrivateParameters(): string[];
 }

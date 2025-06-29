@@ -7,6 +7,7 @@ import { Object } from '@revensky/primitives';
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { JsonWebKey } from '../../../jwk/jsonwebkey';
 import { JsonWebKeyParameters } from '../../../jwk/jsonwebkey.parameters';
+import { JsonWebKeyToJSONOptions } from '../../../jwk/jsonwebkey-to-json.options';
 import { GenerateRSAJsonWebKeyOptions } from './generate-rsa-jsonwebkey.options';
 import { RSAJsonWebKeyParameters } from './rsa.jsonwebkey.parameters';
 
@@ -100,7 +101,7 @@ export class RSAJsonWebKey extends JsonWebKey {
       publicExponent: options.publicExponent ?? 0x010001,
     });
 
-    const privateKeyParameters = privateKey.export({ format: 'jwk' }) as RSAJsonWebKeyParameters;
+    const privateKeyParameters = <RSAJsonWebKeyParameters>privateKey.export({ format: 'jwk' });
 
     const rsaJsonWebKeyParameters: RSAJsonWebKeyParameters = Object.assign(
       privateKeyParameters,
@@ -113,10 +114,11 @@ export class RSAJsonWebKey extends JsonWebKey {
   /**
    * Returns the parameters of the RSA JSON Web Key in a JSON-friendly format.
    *
+   * @param options Options used to customize the returned RSA JSON Web Key Parameters.
    * @returns RSA JSON Web Key Parameters.
    */
-  public override toJSON(): RSAJsonWebKeyParameters {
-    return super.toJSON() as RSAJsonWebKeyParameters;
+  public override toJSON(options?: JsonWebKeyToJSONOptions): RSAJsonWebKeyParameters {
+    return <RSAJsonWebKeyParameters>super.toJSON(options);
   }
 
   /**
@@ -172,5 +174,12 @@ export class RSAJsonWebKey extends JsonWebKey {
    */
   protected getThumbprintParameters(): RSAJsonWebKeyParameters {
     return { e: this.e, kty: this.kty, n: this.n };
+  }
+
+  /**
+   * Returns the list of all private parameters of the RSA JSON Web Key.
+   */
+  protected getPrivateParameters(): string[] {
+    return ['d', 'p', 'q', 'dp', 'dq', 'qi'];
   }
 }
