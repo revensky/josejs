@@ -18,9 +18,9 @@ export type JweAlg =
   | 'PBES2-HS256+A128KW'
   | 'PBES2-HS384+A192KW'
   | 'PBES2-HS512+A256KW'
-  | 'RSA1_5'
   | 'RSA-OAEP'
   | 'RSA-OAEP-256'
   | 'RSA-OAEP-384'
   | 'RSA-OAEP-512'
+  | 'RSA1_5'
   | 'dir';

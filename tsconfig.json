@@ -59,8 +59,7 @@
   },
   "exclude": [
     "dist",
-    "node_modules",
-    "**/*.spec.ts"
+    "node_modules"
   ],
   "ts-node": {
     "compilerOptions": {
