@@ -115,7 +115,7 @@ export class JsonWebKey<T extends JwkParameters = JwkParameters> {
   /**
    * JSON Web Key Parameters.
    */
-  private readonly parameters: T;
+  public readonly parameters: T;
 
   /**
    * Instantiates a new JSON Web Key with the provided parameters.
