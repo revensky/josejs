@@ -440,7 +440,7 @@ describe('JSON Web Key', () => {
       expect(jwkBackendValidate).toHaveBeenCalledOnce();
       expect(jwkBackendValidate).toHaveBeenCalledWith(parameters);
 
-      expect(jwk['parameters']).toStrictEqual(parameters);
+      expect(jwk.parameters).toStrictEqual(parameters);
     });
   });
 
