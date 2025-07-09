@@ -110,4 +110,10 @@ describe('Elliptic Curve JSON Web Key Backend.', () => {
       ]);
     });
   });
+
+  describe('getPrivateParameters()', () => {
+    it('should return the parameter "d".', () => {
+      expect(backend.getPrivateParameters()).toStrictEqual(['d']);
+    });
+  });
 });

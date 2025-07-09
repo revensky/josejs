@@ -32,4 +32,13 @@ export class OctJwkBackend implements JwkBackend {
   public getThumbprintParameters(parameters: OctJwkParameters): OctJwkParameters {
     return { k: parameters.k, kty: parameters.kty };
   }
+
+  /**
+   * Returns a list with the private parameters of the Octet Sequence JSON Web Key.
+   *
+   * @returns Octet Sequence JSON Web Key Private Parameters.
+   */
+  public getPrivateParameters(): string[] {
+    return [];
+  }
 }

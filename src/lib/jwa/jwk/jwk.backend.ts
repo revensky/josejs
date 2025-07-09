@@ -22,4 +22,11 @@ export interface JwkBackend {
    * @returns Public JSON Web Key Parameters for Thumbprint.
    */
   getThumbprintParameters(parameters: JwkParameters): JwkParameters;
+
+  /**
+   * Returns a list with the private parameters of the JSON Web Key.
+   *
+   * @returns JSON Web Key Private Parameters.
+   */
+  getPrivateParameters(): string[];
 }

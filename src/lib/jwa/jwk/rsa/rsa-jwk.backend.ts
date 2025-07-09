@@ -64,4 +64,13 @@ export class RsaJwkBackend implements JwkBackend {
   public getThumbprintParameters(parameters: RsaJwkParameters): RsaJwkParameters {
     return { e: parameters.e, kty: parameters.kty, n: parameters.n };
   }
+
+  /**
+   * Returns a list with the private parameters of the RSA JSON Web Key.
+   *
+   * @returns RSA JSON Web Key Private Parameters.
+   */
+  public getPrivateParameters(): string[] {
+    return ['d', 'p', 'q', 'dp', 'dq', 'qi'];
+  }
 }

@@ -50,4 +50,13 @@ export class EcJwkBackend implements JwkBackend {
   public getThumbprintParameters(parameters: EcJwkParameters): EcJwkParameters {
     return { crv: parameters.crv, kty: parameters.kty, x: parameters.x, y: parameters.y };
   }
+
+  /**
+   * Returns a list with the private parameters of the Elliptic Curve JSON Web Key.
+   *
+   * @returns Elliptic Curve JSON Web Key Private Parameters.
+   */
+  public getPrivateParameters(): string[] {
+    return ['d'];
+  }
 }

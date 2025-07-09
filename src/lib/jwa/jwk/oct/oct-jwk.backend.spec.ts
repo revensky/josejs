@@ -60,4 +60,10 @@ describe('Octet Sequence JSON Web Key Backend', () => {
       ]);
     });
   });
+
+  describe('getPrivateParameters()', () => {
+    it('should return an empty list.', () => {
+      expect(backend.getPrivateParameters()).toStrictEqual([]);
+    });
+  });
 });

@@ -160,6 +160,23 @@ export class JsonWebKey<T extends JwkParameters = JwkParameters> {
   }
 
   /**
+   * Returns the Parameters of the JSON Web Key.
+   *
+   * @param privateKey Exports the parameters of the Private Key together with the Public Key.
+   * @returns JSON Web Key Parameters.
+   */
+  public toJSON(privateKey?: true): T {
+    let entries = Object.entries(this.parameters);
+
+    if (privateKey !== true) {
+      const privateParameters: string[] = this.backend.getPrivateParameters();
+      entries = entries.filter(([parameter]) => !privateParameters.includes(parameter));
+    }
+
+    return Object.removeNullishValues(<T>Object.fromEntries(entries));
+  }
+
+  /**
    * Validates the provided JSON Web Key Parameters.
    *
    * @param parameters JSON Web Key Parameters.

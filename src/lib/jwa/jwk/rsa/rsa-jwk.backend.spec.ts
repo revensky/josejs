@@ -166,4 +166,10 @@ describe('RSA JSON Web Key Backend', () => {
       ]);
     });
   });
+
+  describe('getPrivateParameters()', () => {
+    it('should return the parameters "d", "p", "q", "dp", "dq", "qi".', () => {
+      expect(backend.getPrivateParameters()).toStrictEqual(['d', 'p', 'q', 'dp', 'dq', 'qi']);
+    });
+  });
 });

@@ -4,8 +4,10 @@ import Stream from 'stream';
 
 import { InvalidJsonWebKeyException } from '../exceptions/invalid-jsonwebkey.exception';
 import { EcJwkBackend } from '../jwa/jwk/ec/ec-jwk.backend';
+import { EcJwkParameters } from '../jwa/jwk/ec/ec-jwk.parameters';
 import { JwkBackend } from '../jwa/jwk/jwk.backend';
 import { OctJwkBackend } from '../jwa/jwk/oct/oct-jwk.backend';
+import { OctJwkParameters } from '../jwa/jwk/oct/oct-jwk.parameters';
 import { OkpJwkBackend } from '../jwa/jwk/okp/okp-jwk.backend';
 import { RsaJwkBackend } from '../jwa/jwk/rsa/rsa-jwk.backend';
 import { JsonWebKey } from './jsonwebkey';
@@ -465,6 +467,43 @@ describe('JSON Web Key', () => {
       expect(new JsonWebKey(parameters).getThumbprint('sha256').toString('base64url')).toEqual(
         '9xLGZzIbwEak5aeOAGPXdPLWR374N6ECJ91cNtw_qg8',
       );
+    });
+  });
+
+  describe('toJSON()', () => {
+    it('should return the parameters of a symmetric json web key.', () => {
+      const jwkParameters: OctJwkParameters = {
+        kty: 'oct',
+        k: 'qDM80igvja4Tg_tNsEuWDhl2bMM6_NgJEldFhIEuwqQ',
+      };
+
+      const jwk = new JsonWebKey(jwkParameters);
+
+      expect(jwk.toJSON()).toMatchObject(jwkParameters);
+      expect(jwk.toJSON(true)).toMatchObject(jwkParameters);
+    });
+
+    it('should return the parameters of an asymmetric json web key.', () => {
+      const publicJwkParameters: EcJwkParameters = {
+        kty: 'EC',
+        crv: 'P-256',
+        x: '4c_cS6IT6jaVQeobt_6BDCTmzBaBOTmmiSCpjd5a6Og',
+        y: 'mnrPnCFTDkGdEwilabaqM7DzwlAFgetZTmP9ycHPxF8',
+      };
+
+      const privateJwkParameters: EcJwkParameters = {
+        ...publicJwkParameters,
+        d: 'bwVX6Vx-TOfGKYOPAcu2xhaj3JUzs-McsC-suaHnFBo',
+      };
+
+      const publicJwk = new JsonWebKey(publicJwkParameters);
+      const privateJwk = new JsonWebKey(privateJwkParameters);
+
+      expect(publicJwk.toJSON()).toMatchObject(publicJwkParameters);
+      expect(publicJwk.toJSON(true)).toMatchObject(publicJwkParameters);
+
+      expect(privateJwk.toJSON()).toMatchObject(publicJwkParameters);
+      expect(privateJwk.toJSON(true)).toMatchObject(privateJwkParameters);
     });
   });
 });

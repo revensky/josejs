@@ -51,4 +51,13 @@ export class OkpJwkBackend implements JwkBackend {
   public getThumbprintParameters(parameters: OkpJwkParameters): OkpJwkParameters {
     return { crv: parameters.crv, kty: parameters.kty, x: parameters.x };
   }
+
+  /**
+   * Returns a list with the private parameters of the Octet Key Pair JSON Web Key.
+   *
+   * @returns Octet Key Pair JSON Web Key Private Parameters.
+   */
+  public getPrivateParameters(): string[] {
+    return ['d'];
+  }
 }
