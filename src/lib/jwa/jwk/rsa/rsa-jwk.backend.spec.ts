@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { RsaJwkBackend } from './rsa-jwk.backend';
 import { RsaJwkParameters } from './rsa-jwk.parameters';
@@ -150,6 +152,18 @@ describe('RSA JSON Web Key Backend', () => {
 
     it('should not throw when providing a valid json web key parameters object.', () => {
       expect(() => backend.validate(parameters)).not.toThrow();
+    });
+  });
+
+  describe('getThumbprintParameters()', () => {
+    it('should return the parameters "e", "kty" and "n" in this exact order.', () => {
+      const thumbprintParameters = backend.getThumbprintParameters(parameters);
+
+      expect(Object.entries(thumbprintParameters)).toStrictEqual<[string, string][]>([
+        ['e', parameters.e],
+        ['kty', parameters.kty],
+        ['n', parameters.n],
+      ]);
     });
   });
 });

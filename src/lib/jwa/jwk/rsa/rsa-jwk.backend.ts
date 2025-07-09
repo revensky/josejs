@@ -52,4 +52,16 @@ export class RsaJwkBackend implements JwkBackend {
       }
     }
   }
+
+  /**
+   * Returns the Public RSA JSON Web Key Parameters in lexical order to calculate the Thumbprint.
+   *
+   * @see {@link https://www.rfc-editor.org/rfc/rfc7638.html#section-3.2 | RSA JWK Thumbprint}
+   *
+   * @param parameters RSA JSON Web Key Parameters.
+   * @returns Public RSA JSON Web Key Parameters for Thumbprint.
+   */
+  public getThumbprintParameters(parameters: RsaJwkParameters): RsaJwkParameters {
+    return { e: parameters.e, kty: parameters.kty, n: parameters.n };
+  }
 }

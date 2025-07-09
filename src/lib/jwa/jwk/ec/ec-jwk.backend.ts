@@ -38,4 +38,16 @@ export class EcJwkBackend implements JwkBackend {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "d".');
     }
   }
+
+  /**
+   * Returns the Public Elliptic Curve JSON Web Key Parameters in lexical order to calculate the Thumbprint.
+   *
+   * @see {@link https://www.rfc-editor.org/rfc/rfc7638.html#section-3.2 | EC JWK Thumbprint}
+   *
+   * @param parameters Elliptic Curve JSON Web Key Parameters.
+   * @returns Public Elliptic Curve JSON Web Key Parameters for Thumbprint.
+   */
+  public getThumbprintParameters(parameters: EcJwkParameters): EcJwkParameters {
+    return { crv: parameters.crv, kty: parameters.kty, x: parameters.x, y: parameters.y };
+  }
 }

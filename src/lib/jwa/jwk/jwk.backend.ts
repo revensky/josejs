@@ -12,4 +12,14 @@ export interface JwkBackend {
    * @param parameters JSON Web Key Parameters.
    */
   validate(parameters: JwkParameters): void;
+
+  /**
+   * Returns the Public JSON Web Key Parameters in lexical order to calculate the Thumbprint.
+   *
+   * @see {@link https://www.rfc-editor.org/rfc/rfc7638.html | JWK Thumbprint}
+   *
+   * @param parameters JSON Web Key Parameters.
+   * @returns Public JSON Web Key Parameters for Thumbprint.
+   */
+  getThumbprintParameters(parameters: JwkParameters): JwkParameters;
 }

@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer';
-import { X509Certificate } from 'crypto';
+import { createHash, X509Certificate } from 'crypto';
 import https from 'https';
 
 import { Object } from '@revensky/primitives';
@@ -115,7 +115,6 @@ export class JsonWebKey<T extends JwkParameters = JwkParameters> {
   /**
    * JSON Web Key Parameters.
    */
-  // @ts-expect-error
   private readonly parameters: T;
 
   /**
@@ -145,6 +144,19 @@ export class JsonWebKey<T extends JwkParameters = JwkParameters> {
       typeof Reflect.get(data, 'kty') === 'string' &&
       Object.hasOwn(this.backends, Reflect.get(data, 'kty'))
     );
+  }
+
+  /**
+   * Calculates the Thumbprint of the JSON Web Key.
+   *
+   * @see {@link https://www.rfc-editor.org/rfc/rfc7638.html | JWK Thumbprint}
+   *
+   * @param hashFunction Name of the OpenSSL Hash Function used to calculate the thumbprint.
+   * @returns Thumbprint of the JSON Web Key.
+   */
+  public getThumbprint(hashFunction: string): Buffer {
+    const thumbprintParameters = this.backend.getThumbprintParameters(this.parameters);
+    return createHash(hashFunction).update(JSON.stringify(thumbprintParameters), 'utf8').digest();
   }
 
   /**

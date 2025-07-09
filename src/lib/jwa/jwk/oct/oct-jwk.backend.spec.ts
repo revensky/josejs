@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { OctJwkBackend } from './oct-jwk.backend';
 import { OctJwkParameters } from './oct-jwk.parameters';
@@ -45,6 +47,17 @@ describe('Octet Sequence JSON Web Key Backend', () => {
 
     it('should not throw when providing a valid json web key parameters object.', () => {
       expect(() => backend.validate(parameters)).not.toThrow();
+    });
+  });
+
+  describe('getThumbprintParameters()', () => {
+    it('should return the parameters "k" and "kty" in this exact order.', () => {
+      const thumbprintParameters = backend.getThumbprintParameters(parameters);
+
+      expect(Object.entries(thumbprintParameters)).toStrictEqual<[string, string][]>([
+        ['k', parameters.k],
+        ['kty', parameters.kty],
+      ]);
     });
   });
 });

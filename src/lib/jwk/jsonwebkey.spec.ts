@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import https from 'https';
 import Stream from 'stream';
 
@@ -456,6 +457,14 @@ describe('JSON Web Key', () => {
 
     it('should return true when the provided data is a valid json web key parameters object.', () => {
       expect(JsonWebKey.isJwk({ kty: 'RSA' })).toBeTrue();
+    });
+  });
+
+  describe('getThumbprint()', () => {
+    it('should return the thumbprint of the json web key.', () => {
+      expect(new JsonWebKey(parameters).getThumbprint('sha256').toString('base64url')).toEqual(
+        '9xLGZzIbwEak5aeOAGPXdPLWR374N6ECJ91cNtw_qg8',
+      );
     });
   });
 });

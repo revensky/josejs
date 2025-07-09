@@ -20,4 +20,16 @@ export class OctJwkBackend implements JwkBackend {
       throw new InvalidJsonWebKeyException('Invalid json web key parameter "k".');
     }
   }
+
+  /**
+   * Returns the Public Octet Sequence JSON Web Key Parameters in lexical order to calculate the Thumbprint.
+   *
+   * @see {@link https://www.rfc-editor.org/rfc/rfc7638.html#section-3.2 | oct JWK Thumbprint}
+   *
+   * @param parameters Octet Sequence JSON Web Key Parameters.
+   * @returns Public Octet Sequence JSON Web Key Parameters for Thumbprint.
+   */
+  public getThumbprintParameters(parameters: OctJwkParameters): OctJwkParameters {
+    return { k: parameters.k, kty: parameters.kty };
+  }
 }

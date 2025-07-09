@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 import { InvalidJsonWebKeyException } from '../../../exceptions/invalid-jsonwebkey.exception';
 import { EcJwkBackend } from './ec-jwk.backend';
 import { EcJwkParameters } from './ec-jwk.parameters';
@@ -93,6 +95,19 @@ describe('Elliptic Curve JSON Web Key Backend.', () => {
 
     it('should not throw when providing a valid json web key parameters object.', () => {
       expect(() => backend.validate(parameters)).not.toThrow();
+    });
+  });
+
+  describe('getThumbprintParameters()', () => {
+    it('should return the parameters "crv", "kty", "x" and "y" in this exact order.', () => {
+      const thumbprintParameters = backend.getThumbprintParameters(parameters);
+
+      expect(Object.entries(thumbprintParameters)).toStrictEqual<[string, string][]>([
+        ['crv', parameters.crv],
+        ['kty', parameters.kty],
+        ['x', parameters.x],
+        ['y', parameters.y],
+      ]);
     });
   });
 });
