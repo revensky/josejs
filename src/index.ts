@@ -34,3 +34,4 @@ export { JwksParameters } from './lib/jwks/jwks.parameters';
 
 // JSON Web Signature
 export { JwsAlg } from './lib/jws/jws.alg';
+export { JwsHeader } from './lib/jws/jws.header';
