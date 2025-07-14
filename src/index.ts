@@ -1,8 +1,12 @@
 // Exceptions
+export { InvalidJoseHeaderException } from './lib/exceptions/invalid-jose-header.exception';
 export { InvalidJsonWebKeyException } from './lib/exceptions/invalid-jsonwebkey.exception';
 export { InvalidJsonWebKeySetException } from './lib/exceptions/invalid-jsonwebkeyset.exception';
 export { JoseException } from './lib/exceptions/jose.exception';
 export { JsonWebKeyNotFoundException } from './lib/exceptions/jsonwebkey-not-found.exception';
+
+// JOSE Header
+export { JoseHeader } from './lib/jose/jose.header';
 
 // JSON Web Algorithms
 export { EcJwkParameters } from './lib/jwa/jwk/ec/ec-jwk.parameters';
