@@ -32,5 +32,7 @@ export { JsonWebKeySet } from './lib/jwks/jsonwebkeyset';
 export { JwksParameters } from './lib/jwks/jwks.parameters';
 
 // JSON Web Signature
+export { JsonWebSignature } from './lib/jws/jsonwebsignature';
 export { JwsAlg } from './lib/jws/jws.alg';
 export { JwsHeader } from './lib/jws/jws.header';
+export { JwsHeaders } from './lib/jws/jws.headers';
