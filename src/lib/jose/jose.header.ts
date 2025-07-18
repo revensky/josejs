@@ -205,5 +205,9 @@ export namespace JoseHeader {
     if (typeof header.cty !== 'undefined' && typeof header.cty !== 'string') {
       throw new InvalidJoseHeaderException('Invalid jose header parameter "cty".');
     }
+
+    if (typeof header.jku !== 'undefined' && typeof header.jwk !== 'undefined') {
+      throw new InvalidJoseHeaderException('The jose header parameters "jku" and "jwk" cannot be used together.');
+    }
   }
 }

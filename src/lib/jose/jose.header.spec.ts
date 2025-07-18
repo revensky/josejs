@@ -282,5 +282,14 @@ describe('JOSE Header', () => {
         'Invalid jose header parameter "crit".',
       );
     });
+
+    it('should throw when providing both the parameters "jku" and "jwk".', () => {
+      expect(() =>
+        JoseHeader.validateUnprotectedJoseHeader({ jku: 'http://localhost', jwk: { kty: 'oct', k: 'secret_key' } }),
+      ).toThrowWithMessage(
+        InvalidJoseHeaderException,
+        'The jose header parameters "jku" and "jwk" cannot be used together.',
+      );
+    });
   });
 });
